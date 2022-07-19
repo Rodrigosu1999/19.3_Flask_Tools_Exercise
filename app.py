@@ -11,6 +11,7 @@ debug = DebugToolbarExtension(app)
 
 @app.route("/")
 def home():
+    """Home Directory where we will begin the survey"""
     title = satisfaction_survey.title
     instructions = satisfaction_survey.instructions
     return render_template("home.html", instructions=instructions, title=title)
@@ -28,6 +29,9 @@ def start_survey():
 
 @app.route("/question/<idx>")
 def display_questions(idx):
+    """Question Handle function, we will check if the question is being accessed correctly
+    If accessed incorrectly, the user will be redirected to the correct route
+    Otherwise, the question to be answered will be shown on screen"""
     idx = int(idx)
     responses = session.get("responses")
     if responses is None:
@@ -46,6 +50,8 @@ def display_questions(idx):
 
 @app.route("/answer", methods=["POST"])
 def handle_answers():
+    """The answer will be added to the session so we can store the data
+    If all questions have been answered, the user will be moved to the  complete page"""
     answer = request.form['answer']
     responses = session["responses"]
     responses.append(answer)
@@ -58,4 +64,5 @@ def handle_answers():
 
 @app.route("/complete")
 def display_complete():
+    """Display Thank you message to the user for answering the survey"""
     return render_template("complete.html")
